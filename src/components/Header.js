@@ -19,14 +19,6 @@ import "./Header.css";
 
 
 const Header = ({ handleSearch, reloadVideos }) => {
-  // const initialValues = {
-  //   videoLink: "",
-  //   thumbnailImgLink: "",
-  //   title: "",
-  //   genre: "",
-  //   ageGroup: "",
-  //   publishDate: "",
-  // };
 
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);

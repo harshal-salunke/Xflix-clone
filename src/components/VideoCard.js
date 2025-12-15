@@ -15,9 +15,6 @@ const VideoCard = ({ videos, videoList, fromVideoDetails }) => {
     previewImage,
     releaseDate,
     title,
-    videoLink,
-    genre,
-    contentRating,
     viewCount,
   } = videos;
   const [isHovering, setIsHovering] = useState(false);

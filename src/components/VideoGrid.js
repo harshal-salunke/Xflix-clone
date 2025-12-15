@@ -19,32 +19,27 @@ const VideoGrid = () => {
   const [filteredKeyWords, setFilteredKeywords] = useState([]);
 
   useEffect(() => {
-    loadVideoLists();
-
-    return () => loadVideoLists();
-  }, []);
+  loadVideoLists();
+}, [loadVideoLists]);
 
   /**
    * function to call movie API (/v1/videos) to return list of movies
    */
-  const loadVideoLists = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${config.endpoint}/videos`);
-      if (response.status === 200) {
-        setVideoList(response.data.videos);
-        setFilteredList(response.data.videos);
-      }
-    } catch (err) {
-      if (err) {
-        enqueueSnackbar(`${err.message}, Something went wrong!`, {
-          variant: "error",
-        });
-      }
-    } finally {
-    setLoading(false);
+  const loadVideoLists = useCallback(async () => {
+  setLoading(true);
+  try {
+    const response = await axios.get(`${config.endpoint}/videos`);
+    if (response.status === 200) {
+      setVideoList(response.data.videos);
+      setFilteredList(response.data.videos);
     }
-  };
+  } catch (err) {
+    enqueueSnackbar("Something went wrong!", { variant: "error" });
+  } finally {
+    setLoading(false);
+  }
+}, [enqueueSnackbar]);
+
   useEffect(() => {
     setFilteredList(videoList);
   }, [videoList]);

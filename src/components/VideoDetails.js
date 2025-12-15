@@ -32,8 +32,8 @@ const VideoDetails = () => {
   } = videos;
 
   useEffect(() => {
-    updateViewHandler();
-  }, []);
+  updateViewHandler();
+}, [updateViewHandler]);
 
   /**
    * function to update view count whenever user opens the video
@@ -70,6 +70,9 @@ const VideoDetails = () => {
           change: change,
         }
       );
+      if (response.status === 204) {
+        console.log("vote count updated");
+      }
     } catch (err) {
       const { response } = err;
       if (response && response.status === 400) {
@@ -107,6 +110,7 @@ const VideoDetails = () => {
             src={`https://www.${videoLink}`}
             width="100%"
             height="523px"
+            title="video-player"
           />
           <CardContent className="video-content">
             <Typography className="video-title">{title}</Typography>
