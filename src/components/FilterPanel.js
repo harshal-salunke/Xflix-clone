@@ -30,15 +30,9 @@ const FilterPanel = ({ videoLists, genreFilterHandler, handleSorting, ageGroupFi
   const [ifAnyAgeGroupSelected, setIfAnyAgeGroupSelected] = useState(false);
 
   useEffect(() => {
-    setGenreList(genreLists);
-    setRatingList(ratingLists);
-
-    // this prevents the warning of memory leak
-    return () => {
-      setGenreList([]);
-      setRatingList([]);
-    };
-  }, [videoLists]);
+  setGenreList(genreLists);
+  setRatingList(ratingLists);
+}, [genreLists, ratingLists]);
 
   const handleAllGenreFilter = (param) => {
     genreFilterHandler(param);

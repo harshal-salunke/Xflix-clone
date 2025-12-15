@@ -12,7 +12,6 @@ import Button from "@mui/material/Button";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { config } from "../App";
 import { useSnackbar } from "notistack";
 import axios from "axios";
@@ -20,14 +19,14 @@ import "./Header.css";
 
 
 const Header = ({ handleSearch, reloadVideos }) => {
-  const initialValues = {
-    videoLink: "",
-    thumbnailImgLink: "",
-    title: "",
-    genre: "",
-    ageGroup: "",
-    publishDate: "",
-  };
+  // const initialValues = {
+  //   videoLink: "",
+  //   thumbnailImgLink: "",
+  //   title: "",
+  //   genre: "",
+  //   ageGroup: "",
+  //   publishDate: "",
+  // };
 
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
@@ -37,16 +36,16 @@ const Header = ({ handleSearch, reloadVideos }) => {
   const [genre, setGenre] = useState("");
   const [ageGroup, setAgeGroup] = useState("");
   const [publishDate, setPublishDate] = useState("");
-  const [formValues, setFormValues] = useState(initialValues);
+  // const [formValues, setFormValues] = useState(initialValues);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
 
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
-  };
+  //   setFormValues({
+  //     ...formValues,
+  //     [name]: value,
+  //   });
+  // };
 
   const handleModalOpen = () => {
     setOpen(true);
@@ -96,20 +95,20 @@ const Header = ({ handleSearch, reloadVideos }) => {
     }
   };
 
-  const theme = createTheme({
-    overrides: {
-      MuiOutlinedInput: {
-        root: {
-          "& $notchedOutline": {
-            borderColor: "white",
-          },
-          "&$focused $notchedOutline": {
-            borderColor: "#1976d2",
-          },
-        },
-      },
-    },
-  });
+  // const theme = createTheme({
+  //   overrides: {
+  //     MuiOutlinedInput: {
+  //       root: {
+  //         "& $notchedOutline": {
+  //           borderColor: "white",
+  //         },
+  //         "&$focused $notchedOutline": {
+  //           borderColor: "#1976d2",
+  //         },
+  //       },
+  //     },
+  //   },
+  // });
 
   return (
     <Box
