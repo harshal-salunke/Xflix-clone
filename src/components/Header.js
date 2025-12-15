@@ -19,7 +19,7 @@ import axios from "axios";
 import "./Header.css";
 
 
-const Header = ({ handleSearch }) => {
+const Header = ({ handleSearch, reloadVideos }) => {
   const initialValues = {
     videoLink: "",
     thumbnailImgLink: "",
@@ -60,6 +60,15 @@ const Header = ({ handleSearch }) => {
    *  Function to upload new video. Called when form is filled and upload button is clicked.(POST /v1/videos)
    * @param {*} e event
    */
+
+  const resetForm = () => {
+  setVideoLink("");
+  setThumbnailImgLink("");
+  setTitle("");
+  setGenre("");
+  setAgeGroup("");
+  setPublishDate("");
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -76,7 +85,9 @@ const Header = ({ handleSearch }) => {
       if (response.status === 201) {
         enqueueSnackbar("video uploaded successfully", { variant: "success" });
       }
+      reloadVideos();
       handleModalClose();
+      resetForm();
     } catch (err) {
       const errorMessage =
         err.response?.data?.message || "Something went wrong!";
@@ -218,7 +229,8 @@ const Header = ({ handleSearch }) => {
                 <MenuItem value="Education">Education</MenuItem>
                 <MenuItem value="Sports">Sports</MenuItem>
                 <MenuItem value="Comedy">Comedy</MenuItem>
-                <MenuItem value="LifeStyle">LifeStyle</MenuItem>
+                <MenuItem value="Lifestyle">Lifestyle</MenuItem>
+                <MenuItem value="Movies">Movies</MenuItem>
               </TextField>
               <TextField
                 id="upload-btn-content-rating"
@@ -230,7 +242,7 @@ const Header = ({ handleSearch }) => {
                 value={ageGroup}
                 onChange={(e) => setAgeGroup(e.target.value)}
               >
-                <MenuItem value="Any age group">Any age group</MenuItem>
+                <MenuItem value="Anyone">Any age group</MenuItem>
                 <MenuItem value="7+">7+</MenuItem>
                 <MenuItem value="12+">12+</MenuItem>
                 <MenuItem value="16+">16+</MenuItem>

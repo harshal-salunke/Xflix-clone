@@ -41,9 +41,13 @@ const VideoGrid = () => {
           variant: "error",
         });
       }
-    }
+    } finally {
     setLoading(false);
+    }
   };
+  useEffect(() => {
+    setFilteredList(videoList);
+  }, [videoList]);
 
   /**
    *  keyword entered in search box to search movies
@@ -149,13 +153,48 @@ const VideoGrid = () => {
     setLoading(false);
   };
 
+  const ageGroupFilterHandler = async (ageGroup) => {
+  setLoading(true);
+
+  try {
+    let params = {};
+
+    // genre filter
+    if (filteredKeyWords.length) {
+      params.genres = filteredKeyWords.join(",");
+    }
+
+    // age filter
+    if (ageGroup && ageGroup !== "Anyone") {
+      params.contentRating = ageGroup;
+    }
+
+    const response = await axios.get(`${config.endpoint}/videos`, {
+      params,
+    });
+
+    if (response.status === 200) {
+      setFilteredList(response.data.videos);
+    }
+  } catch (err) {
+    enqueueSnackbar(
+      err.response?.data?.message || "Something went wrong!",
+      { variant: "error" }
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   return (
     <>
-      <Header handleSearch={handleSearch} />
+      <Header handleSearch={handleSearch} reloadVideos={loadVideoLists} />
       <FilterPanel
         handleSorting={handleSort}
         videoLists={videoList}
         genreFilterHandler={genreFilterHandler}
+        ageGroupFilterHandler={ageGroupFilterHandler}
       />
       <Container>
         {loading ? (
@@ -178,7 +217,7 @@ const VideoGrid = () => {
             {filteredList && filteredList.length ? (
               filteredList.map((item) => {
                 return (
-                  <Grid item xs={6} md={3} key={item._id}>
+                  <Grid item xs={6} md={3} key={item.id}>
                     <VideoCard
                       videos={item}
                       videoList={videoList}

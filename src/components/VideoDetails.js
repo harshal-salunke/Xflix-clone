@@ -148,7 +148,7 @@ const VideoDetails = () => {
           {slicedVideoList && slicedVideoList.length ? (
             slicedVideoList.map((item) => {
               return (
-                <Grid item xs={6} md={3} key={item._id}>
+                <Grid item xs={6} md={3} key={item.id}>
                   <VideoCard
                     videos={item}
                     videoList={videoList}
