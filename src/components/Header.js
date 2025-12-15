@@ -78,11 +78,10 @@ const Header = ({ handleSearch }) => {
       }
       handleModalClose();
     } catch (err) {
-      if (err) {
-        enqueueSnackbar(`${err.message}, Something went wrong!`, {
-          variant: "error",
-        });
-      }
+      const errorMessage =
+        err.response?.data?.message || "Something went wrong!";
+
+      enqueueSnackbar(errorMessage, { variant: "error" });
     }
   };
 
