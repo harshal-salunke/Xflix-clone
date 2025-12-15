@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import Container from "@mui/material/Container";
 import VideoCard from "./VideoCard";
@@ -31,30 +31,30 @@ const VideoDetails = () => {
     votes,
   } = videos;
 
-  useEffect(() => {
-  updateViewHandler();
-}, [updateViewHandler]);
+ 
 
   /**
    * function to update view count whenever user opens the video
    */
-  const updateViewHandler = async () => {
-    try {
-      const response = await axios.patch(
-        `${config.endpoint}/videos/${id}/views`
-      );
-      if (response.status === 204) {
-        console.log("view count updated");
-      }
-    } catch (err) {
-      const { response } = err;
-      if (response && response.status === 400) {
-        enqueueSnackbar(response.data.message, { variant: "error" });
-      } else {
-        enqueueSnackbar(`${err.message}`, { variant: "error" });
-      }
+  const updateViewHandler = useCallback(async () => {
+  try {
+    await axios.patch(
+      `${config.endpoint}/videos/${id}/views`
+    );
+  } catch (err) {
+    const { response } = err;
+    if (response && response.status === 400) {
+      enqueueSnackbar(response.data.message, { variant: "error" });
+    } else {
+      enqueueSnackbar(`${err.message}`, { variant: "error" });
     }
-  };
+  }
+}, [id, enqueueSnackbar]);
+
+
+   useEffect(() => {
+  updateViewHandler();
+}, [updateViewHandler]);
 
   /**
    * function to update like or dislike on video

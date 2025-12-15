@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Header from "./Header";
 import FilterPanel from "./FilterPanel";
 import Container from "@mui/material/Container";
@@ -18,9 +18,7 @@ const VideoGrid = () => {
   const [loading, setLoading] = useState(false);
   const [filteredKeyWords, setFilteredKeywords] = useState([]);
 
-  useEffect(() => {
-  loadVideoLists();
-}, [loadVideoLists]);
+ 
 
   /**
    * function to call movie API (/v1/videos) to return list of movies
@@ -39,6 +37,10 @@ const VideoGrid = () => {
     setLoading(false);
   }
 }, [enqueueSnackbar]);
+
+ useEffect(() => {
+  loadVideoLists();
+}, [loadVideoLists]);
 
   useEffect(() => {
     setFilteredList(videoList);
