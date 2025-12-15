@@ -64,7 +64,7 @@ const VideoDetails = () => {
   const voteHandler = async (vote, change) => {
     try {
       const response = await axios.patch(
-        `${config.endpoint}/videos/${_id}/votes`,
+        `${config.endpoint}/videos/${id}/votes`,
         {
           vote: vote,
           change: change,
