@@ -21,7 +21,7 @@ const VideoDetails = () => {
   const { videos, videoList } = location.state;
   const slicedVideoList = videoList.slice(0, 8);
   const {
-    _id,
+    id,
     releaseDate,
     title,
     videoLink,
@@ -41,7 +41,7 @@ const VideoDetails = () => {
   const updateViewHandler = async () => {
     try {
       const response = await axios.patch(
-        `$${config.endpoint}/videos/${_id}/views`
+        `${config.endpoint}/videos/${id}/views`
       );
       if (response.status === 204) {
         console.log("view count updated");
@@ -101,7 +101,7 @@ const VideoDetails = () => {
         </Typography>
       </Box>
       <Container>
-        <Card className="video-tile" id={_id}>
+        <Card className="video-tile" id={id}>
           <iframe
             sandbox="allow-same-origin allow-forms allow-scripts"
             src={`https://www.${videoLink}`}

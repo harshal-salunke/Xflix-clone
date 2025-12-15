@@ -11,7 +11,7 @@ import "./VideoCard.css";
 
 const VideoCard = ({ videos, videoList, fromVideoDetails }) => {
   const {
-    _id,
+    id,
     previewImage,
     releaseDate,
     title,
@@ -42,7 +42,7 @@ const VideoCard = ({ videos, videoList, fromVideoDetails }) => {
         className={isHovering ? "video-tile video-tile-hover" : "video-tile"}
         onMouseOver={debouncedMouseHover}
         onMouseOut={onMouseLeave}
-        id={_id}
+        id={id}
       >
         <CardMedia
           component="img"
@@ -70,7 +70,7 @@ const VideoCard = ({ videos, videoList, fromVideoDetails }) => {
   return fromVideoDetails ? (
     <NavLink
       to={{
-        pathname: `video/${_id}`,
+        pathname: `video/${id}`,
         state: { videos: videos, videoList: videoList },
       }}
       className="video-tile-link"

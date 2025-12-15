@@ -5,7 +5,7 @@ import { Route, Switch } from "react-router-dom";
 import "./App.css";
 
 export const config = {
-  endpoint: `https://24cfea2d-b57e-422b-99d4-390ad149e450.mock.pstmn.io/v1`,
+  endpoint: `https://xflix-backend-1avv.onrender.com/v1`,
 };
 
 function App() {
