@@ -1,8 +1,6 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import Container from "@mui/material/Container";
-import VideoCard from "./VideoCard";
-import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -20,8 +18,7 @@ const VideoDetails = () => {
   const location = useLocation();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const { videos, videoList } = location.state;
-  const slicedVideoList = videoList.slice(0, 8);
+  const { videos } = location.state;
   const {
     id,
     releaseDate,
