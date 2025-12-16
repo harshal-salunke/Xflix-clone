@@ -6,7 +6,9 @@
   background-color: #fff;
   color: #586069;
   cursor: pointer;
+  min-width: 140px;
 }
+
 
 .select-options {
   border: none;
@@ -16,34 +18,45 @@
 }
 
 .genre-btn,
-.content-rating-btn {
+.genre-btn-selected,
+.content-rating-btn,
+.content-rating-btn-selected {
   padding: 6px 20px;
   border-radius: 30px;
   border: none;
   font-size: 15px;
   background-color: #222222;
   color: #fff;
+  white-space: nowrap;
 }
 
+/* Selected override */
 .genre-btn-selected,
 .content-rating-btn-selected {
-  padding: 6px 20px;
-  border-radius: 30px;
-  border: none;
-  font-size: 15px;
   background-color: #fff;
   color: #586069;
 }
 
-.genre-btn:hover {
-  background-color: #fff;
-  color: #586069;
-  cursor: pointer;
-}
-
+/* Hover */
+.genre-btn:hover,
 .content-rating-btn:hover {
   background-color: #fff;
   color: #586069;
   cursor: pointer;
+}
 
+/* 🔥 Mobile optimization */
+@media (max-width: 600px) {
+  .genre-btn,
+  .genre-btn-selected,
+  .content-rating-btn,
+  .content-rating-btn-selected {
+    font-size: 13px;
+    padding: 6px 14px;
+  }
+
+  .sort-select {
+    width: 100%;
+    text-align: center;
+  }
 }

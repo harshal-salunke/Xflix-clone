@@ -78,11 +78,18 @@ const FilterPanel = ({
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-around",
-          width: "50%",
+          flexWrap: "wrap",
+          gap: "10px",
+          justifyContent: "center",
+          width: {
+            xs: "100%",
+            sm: "90%",
+            md: "55%",
+          },
           marginTop: "10px",
         }}
       >
+
         {/* All Genre */}
         <button
           className={
@@ -128,12 +135,19 @@ const FilterPanel = ({
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-around",
-          width: "50%",
+          flexWrap: "wrap",
+          gap: "10px",
+          justifyContent: "center",
+          width: {
+            xs: "100%",
+            sm: "90%",
+            md: "50%",
+          },
           marginTop: "20px",
           marginBottom: "30px",
         }}
       >
+
         {/* Any Age Group */}
         <button
           className={
