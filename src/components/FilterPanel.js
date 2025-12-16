@@ -1,45 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import Box from "@mui/material/Box";
 import { ReleaseDate, AllGenreParameter } from "../constants/constants";
 import "./FilterPanel.css";
 
-const FilterPanel = ({ videoLists, genreFilterHandler, handleSorting, ageGroupFilterHandler }) => {
+/**
+ * Future proof order – easy to extend later
+ */
+const CONTENT_RATING_ORDER = ["7+", "12+", "16+", "18+"];
+
+const FilterPanel = ({
+  videoLists,
+  genreFilterHandler,
+  handleSorting,
+  ageGroupFilterHandler,
+}) => {
   const [sortParameter, setSortParameter] = useState(ReleaseDate);
+  const [selectedGenre, setSelectedGenre] = useState(AllGenreParameter);
+  const [selectedRating, setSelectedRating] = useState("Anyone");
 
-  // extracting unique genres and content ratings
-  const genreLists = [...new Set(videoLists.map((item) => item.genre))].map(
-    (item) => {
-      return {
-        genre: item,
-        isSelected: false,
-      };
-    }
-  );
-  const ratingLists = [
-  ...new Set(videoLists.map((item) => item.contentRating)),
-]
-  .filter((rating) => rating !== "Anyone")
-  .map((item) => ({
-    rating: item,
-    isSelected: false,
-  }));
+  /**
+   * Genres – derived from videos
+   */
+  const genreList = useMemo(() => {
+    return [...new Set(videoLists.map((v) => v.genre))];
+  }, [videoLists]);
 
-  const [genreList, setGenreList] = useState([]);
-  const [ratingList, setRatingList] = useState([]);
-  const [ifAllGenreSelected, setIfAllGenreSelected] = useState(true);
-  const [ifAnyAgeGroupSelected, setIfAnyAgeGroupSelected] = useState(false);
+  /**
+   * Content ratings – sorted properly (ascending)
+   */
+  const ratingList = useMemo(() => {
+    return [...new Set(videoLists.map((v) => v.contentRating))]
+      .filter((r) => r !== "Anyone")
+      .sort(
+        (a, b) =>
+          CONTENT_RATING_ORDER.indexOf(a) -
+          CONTENT_RATING_ORDER.indexOf(b)
+      );
+  }, [videoLists]);
 
-  useEffect(() => {
-  setGenreList(genreLists);
-  setRatingList(ratingLists);
-}, [genreLists, ratingLists]);
+  /**
+   * Genre handlers
+   */
+  const handleAllGenreClick = () => {
+    setSelectedGenre(AllGenreParameter);
+    genreFilterHandler(AllGenreParameter);
+  };
 
-  const handleAllGenreFilter = (param) => {
-    genreFilterHandler(param);
-    setIfAllGenreSelected(true);
-    const tempList = [...genreList];
-    tempList.forEach((item) => (item.isSelected = false));
-    setGenreList(tempList);
+  const handleGenreClick = (genre) => {
+    setSelectedGenre(genre);
+    genreFilterHandler(genre);
+  };
+
+  /**
+   * Rating handlers
+   */
+  const handleAnyAgeGroup = () => {
+    setSelectedRating("Anyone");
+    ageGroupFilterHandler("Anyone");
+  };
+
+  const handleRatingClick = (rating) => {
+    setSelectedRating(rating);
+    ageGroupFilterHandler(rating);
   };
 
   return (
@@ -48,11 +70,11 @@ const FilterPanel = ({ videoLists, genreFilterHandler, handleSorting, ageGroupFi
         display: "flex",
         flexDirection: "column",
         backgroundColor: "#222222",
-        justifyContent: "center",
         alignItems: "center",
         marginBottom: "20px",
       }}
     >
+      {/* ================= GENRE + SORT ================= */}
       <Box
         sx={{
           display: "flex",
@@ -61,57 +83,48 @@ const FilterPanel = ({ videoLists, genreFilterHandler, handleSorting, ageGroupFi
           marginTop: "10px",
         }}
       >
+        {/* All Genre */}
         <button
-          className={ifAllGenreSelected ? "genre-btn-selected" : "genre-btn"}
-          onClick={() => handleAllGenreFilter(AllGenreParameter)}
+          className={
+            selectedGenre === AllGenreParameter
+              ? "genre-btn-selected"
+              : "genre-btn"
+          }
+          onClick={handleAllGenreClick}
         >
           All Genre
         </button>
-        {genreList &&
-          genreList.map((item) => {
-            return (
-              <button
-                className={item.isSelected ? "genre-btn-selected" : "genre-btn"}
-                id={`${item.genre}-${item.isSelected}`}
-                key={`${item.genre}-${item.isSelected}`}
-                onClick={() => {
-                  setIfAllGenreSelected(false);
-                  genreFilterHandler(item.genre);
-                  if (item.isSelected) {
-                    item.isSelected = false;
-                  } else {
-                    item.isSelected = true;
-                  }
-                }}
-              >
-                {item.genre}
-              </button>
-            );
-          })}
+
+        {/* Genre buttons */}
+        {genreList.map((genre) => (
+          <button
+            key={genre}
+            className={
+              selectedGenre === genre
+                ? "genre-btn-selected"
+                : "genre-btn"
+            }
+            onClick={() => handleGenreClick(genre)}
+          >
+            {genre}
+          </button>
+        ))}
+
+        {/* Sort */}
         <select
           value={sortParameter}
           onChange={(e) => {
-            handleSorting(e.target.value);
             setSortParameter(e.target.value);
+            handleSorting(e.target.value);
           }}
           className="sort-select"
         >
-          <option
-            className="select-options"
-            id="release-date-option"
-            value="releaseDate"
-          >
-            Release Date
-          </option>
-          <option
-            className="select-options"
-            id="view-count-option"
-            value="viewCount"
-          >
-            View Count
-          </option>
+          <option value="releaseDate">Release Date</option>
+          <option value="viewCount">View Count</option>
         </select>
       </Box>
+
+      {/* ================= CONTENT RATING ================= */}
       <Box
         sx={{
           display: "flex",
@@ -121,48 +134,32 @@ const FilterPanel = ({ videoLists, genreFilterHandler, handleSorting, ageGroupFi
           marginBottom: "30px",
         }}
       >
+        {/* Any Age Group */}
         <button
           className={
-            ifAnyAgeGroupSelected
+            selectedRating === "Anyone"
               ? "content-rating-btn-selected"
               : "content-rating-btn"
           }
-          onClick={() => {
-            setIfAnyAgeGroupSelected(true);
-            ageGroupFilterHandler("Anyone"); 
-            setRatingList((prev) =>
-              prev.map((r) => ({ ...r, isSelected: false }))
-            );
-          }}
+          onClick={handleAnyAgeGroup}
         >
           Any age group
         </button>
-        {ratingList.map((item, index) => (
+
+        {/* Rating buttons */}
+        {ratingList.map((rating) => (
           <button
-            key={item.rating}
+            key={rating}
             className={
-              item.isSelected
+              selectedRating === rating
                 ? "content-rating-btn-selected"
                 : "content-rating-btn"
             }
-            onClick={() => {
-              setIfAnyAgeGroupSelected(false);
-
-              setRatingList((prev) =>
-                prev.map((r, i) =>
-                  i === index
-                    ? { ...r, isSelected: true }
-                    : { ...r, isSelected: false }
-                )
-              );
-
-              ageGroupFilterHandler(item.rating);
-            }}
+            onClick={() => handleRatingClick(rating)}
           >
-            {item.rating}
+            {rating}
           </button>
         ))}
-
       </Box>
     </Box>
   );

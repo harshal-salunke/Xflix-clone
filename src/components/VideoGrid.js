@@ -18,11 +18,6 @@ const VideoGrid = () => {
   const [loading, setLoading] = useState(false);
   const [filteredKeyWords, setFilteredKeywords] = useState([]);
 
- 
-
-  /**
-   * function to call movie API (/v1/videos) to return list of movies
-   */
   const loadVideoLists = useCallback(async () => {
   setLoading(true);
   try {
@@ -46,10 +41,6 @@ const VideoGrid = () => {
     setFilteredList(videoList);
   }, [videoList]);
 
-  /**
-   *  keyword entered in search box to search movies
-   * @param string
-   */
   const handleSearch = (e) => {
     let value = e.target.value;
 
@@ -63,10 +54,6 @@ const VideoGrid = () => {
     }
   };
 
-  /**
-   *  function to sort videos either by viewCount or releaseDate
-   * @param {*} parameter to sort by "releaseDate or viewCount"
-   */
   const handleSort = async (parameter) => {
     setLoading(true);
     try {
@@ -93,10 +80,6 @@ const VideoGrid = () => {
     setLoading(false);
   };
 
-  /**
-   *
-   * @param {*} item genre name by which to apply filter
-   */
   const genreFilterHandler = async (item) => {
     setLoading(true);
 
@@ -104,26 +87,21 @@ const VideoGrid = () => {
       let searchKeyWords;
       let tempKeywords = [...filteredKeyWords];
 
-      // if genre other than All
       if (item !== AllGenreParameter) {
-        // if genre already includes then remove item from array
         if (tempKeywords.includes(item)) {
           tempKeywords.splice(tempKeywords.indexOf(item), 1);
         }
-        // if genre isn't in array, then add it to array
         else {
           tempKeywords.push(item);
         }
         setFilteredKeywords(tempKeywords);
 
-        // if no item in array, i.e. All genre should be selected
         if (!tempKeywords.length) {
           searchKeyWords = AllGenreParameter;
         } else {
           searchKeyWords = tempKeywords.join(",");
         }
       }
-      // if All genre is selected by user
       else if (item === AllGenreParameter) {
         searchKeyWords = AllGenreParameter;
         tempKeywords = [];
@@ -156,12 +134,10 @@ const VideoGrid = () => {
   try {
     let params = {};
 
-    // genre filter
     if (filteredKeyWords.length) {
       params.genres = filteredKeyWords.join(",");
     }
 
-    // age filter
     if (ageGroup && ageGroup !== "Anyone") {
       params.contentRating = ageGroup;
     }

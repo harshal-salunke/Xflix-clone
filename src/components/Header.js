@@ -28,16 +28,6 @@ const Header = ({ handleSearch, reloadVideos }) => {
   const [genre, setGenre] = useState("");
   const [ageGroup, setAgeGroup] = useState("");
   const [publishDate, setPublishDate] = useState("");
-  // const [formValues, setFormValues] = useState(initialValues);
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-
-  //   setFormValues({
-  //     ...formValues,
-  //     [name]: value,
-  //   });
-  // };
 
   const handleModalOpen = () => {
     setOpen(true);
@@ -86,21 +76,6 @@ const Header = ({ handleSearch, reloadVideos }) => {
       enqueueSnackbar(errorMessage, { variant: "error" });
     }
   };
-
-  // const theme = createTheme({
-  //   overrides: {
-  //     MuiOutlinedInput: {
-  //       root: {
-  //         "& $notchedOutline": {
-  //           borderColor: "white",
-  //         },
-  //         "&$focused $notchedOutline": {
-  //           borderColor: "#1976d2",
-  //         },
-  //       },
-  //     },
-  //   },
-  // });
 
   return (
     <Box

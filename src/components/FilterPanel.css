@@ -5,12 +5,14 @@
   padding: 6px 17px;
   background-color: #fff;
   color: #586069;
+  cursor: pointer;
 }
 
 .select-options {
   border: none;
   padding: 10px;
   font-family: "Hind Siliguri", sans-serif;
+  
 }
 
 .genre-btn,
@@ -36,4 +38,12 @@
 .genre-btn:hover {
   background-color: #fff;
   color: #586069;
+  cursor: pointer;
+}
+
+.content-rating-btn:hover {
+  background-color: #fff;
+  color: #586069;
+  cursor: pointer;
+
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import Container from "@mui/material/Container";
 import VideoCard from "./VideoCard";
@@ -8,6 +8,8 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
+import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import { useSnackbar } from "notistack";
 import axios from "axios";
 import moment from "moment";
@@ -31,59 +33,70 @@ const VideoDetails = () => {
     votes,
   } = videos;
 
- 
+  const [upVotes, setUpVotes] = useState(
+  Math.max(0, Number(votes?.upVotes || 0))
+  );
+  const [downVotes, setDownVotes] = useState(
+    Math.max(0, Math.abs(Number(votes?.downVotes || 0)))
+  );
 
-  /**
-   * function to update view count whenever user opens the video
-   */
+  const [views, setViews] = useState(Number(viewCount || 0));
+
   const updateViewHandler = useCallback(async () => {
+  setViews((prev) => prev + 1);
+
   try {
-    await axios.patch(
-      `${config.endpoint}/videos/${id}/views`
-    );
+    await axios.patch(`${config.endpoint}/videos/${id}/views`);
   } catch (err) {
+    //API fail hui to rollback
+    setViews((prev) => prev - 1);
+
     const { response } = err;
-    if (response && response.status === 400) {
-      enqueueSnackbar(response.data.message, { variant: "error" });
-    } else {
-      enqueueSnackbar(`${err.message}`, { variant: "error" });
+    enqueueSnackbar(
+      response?.data?.message || "Failed to update views",
+      { variant: "error" }
+    );
     }
+  }, [id, enqueueSnackbar]);
+  
+
+  useEffect(() => {
+  const viewed = sessionStorage.getItem(`viewed_${id}`);
+
+  if (!viewed) {
+    sessionStorage.setItem(`viewed_${id}`, "true");
+    updateViewHandler(); 
   }
-}, [id, enqueueSnackbar]);
+}, [id, updateViewHandler]);
 
 
-   useEffect(() => {
-  updateViewHandler();
-}, [updateViewHandler]);
 
-  /**
-   * function to update like or dislike on video
-   * @param {*} vote value either "increase" or "decrease"
-   * @param {*} change whether increment or decrement the vote
-   */
-  const voteHandler = async (vote, change) => {
-    try {
-      const response = await axios.patch(
-        `${config.endpoint}/videos/${id}/votes`,
-        {
-          vote: vote,
-          change: change,
-        }
-      );
-      if (response.status === 204) {
-        console.log("vote count updated");
+    const voteHandler = async (vote, change) => {
+      if (vote === "upVote") {
+        setUpVotes((prev) => prev + 1);
       }
-    } catch (err) {
-      const { response } = err;
-      if (response && response.status === 400) {
-        enqueueSnackbar(response.data.message, { variant: "error" });
-      } else {
-        enqueueSnackbar(`${err.message}, Something went wrong!`, {
-          variant: "error",
+
+      if (vote === "downVote") {
+        setDownVotes((prev) => prev + 1);
+      }
+
+      try {
+        await axios.patch(`${config.endpoint}/videos/${id}/votes`, {
+          vote,
+          change,
         });
+      } catch (err) {
+        if (vote === "upVote") {
+          setUpVotes((prev) => prev - 1);
+        }
+        if (vote === "downVote") {
+          setDownVotes((prev) => prev - 1);
+        }
+
+        enqueueSnackbar("Something went wrong!", { variant: "error" });
       }
-    }
   };
+
 
   return (
     <>
@@ -114,20 +127,23 @@ const VideoDetails = () => {
           />
           <CardContent className="video-content">
             <Typography className="video-title">{title}</Typography>
-            <Typography className="video-votes-section">
-              <span
-                className="video-upvote"
+            <Box className="video-votes-section">
+              <Box
+                className="vote-item"
                 onClick={() => voteHandler("upVote", "increase")}
               >
-                {votes.upVotes}
-              </span>
-              <span
-                className="video-downvote"
+                <ThumbUpAltOutlinedIcon />
+                <span>{upVotes}</span>
+              </Box>
+
+              <Box
+                className="vote-item"
                 onClick={() => voteHandler("downVote", "decrease")}
               >
-                {votes.downVotes}
-              </span>
-            </Typography>
+                <ThumbDownAltOutlinedIcon />
+                <span>{downVotes}</span>
+              </Box>
+            </Box>
             <Typography className="video-release-date">
               <Box>
                 {contentRating} <span className="video-dot"></span>{" "}
@@ -137,13 +153,13 @@ const VideoDetails = () => {
             <Typography className="video-view-section">
               <Box className="video-genre">{genre}</Box>
               <Box>
-                <span className="video-count">{viewCount}</span>
+                <span className="video-count">{views}</span>
                 <span className="video-view-icon">{<VisibilityIcon />}</span>
               </Box>
             </Typography>
           </CardContent>
         </Card>
-        <hr />
+        {/* <hr />
         <Grid
           container
           spacing={2}
@@ -164,7 +180,7 @@ const VideoDetails = () => {
           ) : (
             <></>
           )}
-        </Grid>
+        </Grid> */}
       </Container>
     </>
   );

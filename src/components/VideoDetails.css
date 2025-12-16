@@ -26,8 +26,29 @@
 }
 
 .video-votes-section {
-  align-self: flex-end;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 8px 0;
+  justify-content: flex-end;
 }
+
+.vote-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #bdbdbd;
+}
+
+.vote-item:hover {
+  color: #ffffff;
+}
+
+.vote-item span {
+  font-size: 14px;
+}
+
 
 .video-release-date {
   margin-top: -10px !important;
